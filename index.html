@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- Form: https://www.youtube.com/watch?v=6oFvqLfRnsU&list=WL&index=6 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+
+
+</head>
+<body>
+    <!-- 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    -->
+    <script src="js/three.js"></script>
+
+    <script>
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth/window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.z = 5;
+
+        var renderer = new THREE.WebGLRenderer({anitalias:true});
+        renderer.setClearColor('#e5e5e5');
+        renderer.setSize(window.innerWidth,window.innerHeight);
+
+        document.body.appendChild(renderer.domElement);
+
+        window.addEventListener("resize", () =>{
+            renderer.setSize(window.innerWidth,window.innerHeight);
+            camera.aspect = window.innerWidth/window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        
+
+        // fins aquí hem establert la escena, la càmera i el renderer
+
+        // creem contingut a partir d'aquí
+
+        var geometry = new THREE.BoxGeometry(1,1,1);
+        var material = new THREE.MeshLambertMaterial({color:0xffcc00});
+        var mesh = new THREE.Mesh(geometry,material);
+        mesh.position.x = 0;
+       
+
+
+        scene.add(mesh);
+
+
+        // posem llums
+
+        var light = new THREE.PointLight(0xffffff,1,500);
+        light.position.set(5,0,25);
+        scene.add(light);
+
+        // acció que s'executa a cada frame
+
+        var render = function(){
+            requestAnimationFrame(render);
+
+
+            mesh.rotation.x += 0.03;
+            mesh.rotation.y += 0.02;
+            mesh.rotation.z += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        render();
+
+    </script>
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+</body>
+</html>
