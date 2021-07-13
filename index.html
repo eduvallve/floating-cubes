@@ -11,7 +11,11 @@
 
 </head>
 <body>
-    <script src="js/three.js"></script>
+
+    <h1>Three.js rocks!</h1>
+    <script src="js/three.js"></script> 
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
 
     <script>
         var scene = new THREE.Scene();
@@ -41,21 +45,40 @@
         // fins aquí hem establert la escena, la càmera i el renderer
 
         // creem contingut a partir d'aquí
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
 
         var geometry = new THREE.BoxGeometry(1,1,1);
-        var material = new THREE.MeshLambertMaterial({color:0xffcc00});
-        var mesh = new THREE.Mesh(geometry,material);
-        mesh.position.x = 0;
-       
+        var material = new THREE.MeshLambertMaterial({color:0xcccccc});
+        //var mesh = new THREE.Mesh(geometry,material);
+        //mesh.position.x = 0;
+        //scene.add(mesh);
+        
+
+        meshX = -10;
+        for(var i=0;i<15;i++){
+            var mesh = new THREE.Mesh(geometry,material);
+            mesh.position.x = (Math.random() - 0.5) * 10;
+            mesh.position.y = (Math.random() - 0.5) * 10;
+            mesh.position.z = (Math.random() - 0.5) * 10;
+            scene.add(mesh);
+            meshX += 1;
+        }
+        
+        
 
 
-        scene.add(mesh);
+    
 
 
         // posem llums
 
         var light = new THREE.PointLight(0xffffff,1,500);
-        light.position.set(5,0,25);
+        light.position.set(0,0,0);
+        scene.add(light);
+
+        var light = new THREE.PointLight(0xffffff,2,1000);
+        light.position.set(0,0,25);
         scene.add(light);
 
         // acció que s'executa a cada frame
@@ -63,21 +86,40 @@
         var render = function(){
             requestAnimationFrame(render);
 
-
+            /*
             mesh.rotation.x += 0.03;
             mesh.rotation.y += 0.02;
             mesh.rotation.z += 0.01;
+            */
 
             renderer.render(scene, camera);
         }
 
+
+        function onMouseMove(event){
+            event.preventDefault();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse,camera);
+            var intersects = raycaster.intersectObjects(scene.children, true);
+            for (var i=0; i < intersects.length; i++){
+                //intersects[i].object.material.color.set(0xff0000);
+                this.tl = new TimelineMax();
+                this.tl.to(intersects[i].object.scale, 1, {x:2, ease: Expo.easeOut});
+                this.tl.to(intersects[i].object.scale, 0.5, {x:0.5, ease: Expo.easeOut});
+                this.tl.to(intersects[i].object.position, 0.5, {x:2, ease: Expo.easeOut});
+                this.tl.to(intersects[i].object.rotation, 0.5, {y:Math.PI*0.5, ease: Expo.easeOut}, "= -1.5");
+                //this.tl.to(intersects[i].object.material.color, 0.5, {'0xff0000', ease: Expo.easeOut});
+
+            }
+        }
+
         render();
 
+
+
+        window.addEventListener('mousemove', onMouseMove);
     </script>
-    <style>
-        body {
-            margin: 0px;
-        }
-    </style>
+    
 </body>
 </html>

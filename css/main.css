@@ -1,0 +1,19 @@
+body {
+    margin: 0px;
+    position:relative;
+}
+
+h1{
+    position:absolute;
+    top:200px;
+    /* left:2em; */
+    font-family: 'Montserrat';
+    font-size: 6em;
+    text-transform: uppercase;
+    width:auto;
+    line-height: .8em;
+    border: 5px solid black;
+    padding: .2em;
+    transform: translateX(-50%);
+    margin-left:50%;
+}
